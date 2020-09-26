@@ -17,24 +17,6 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="File"/>
           </Properties>
-          <SubComponents>
-            <MenuItem class="javax.swing.JMenuItem" name="jMenuItem1">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Abrir archivo"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItem1ActionPerformed"/>
-              </Events>
-            </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="jMenuItem2">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Guardar archivo"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItem2ActionPerformed"/>
-              </Events>
-            </MenuItem>
-          </SubComponents>
         </Menu>
         <Menu class="javax.swing.JMenu" name="jMenu2">
           <Properties>
@@ -85,6 +67,24 @@
         <Property name="axis" type="int" value="1"/>
       </Layout>
       <SubComponents>
+        <Container class="javax.swing.JPanel" name="jPanel6">
+
+          <Layout class="org.netbeans.modules.form.compat2.layouts.DesignFlowLayout"/>
+          <SubComponents>
+            <Component class="javax.swing.JLabel" name="nombreArchivoLabel">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Nopmbre del archivo"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JTextField" name="nombreArchivoField">
+              <Properties>
+                <Property name="columns" type="int" value="15"/>
+              </Properties>
+            </Component>
+          </SubComponents>
+        </Container>
+        <Component class="javax.swing.JSeparator" name="jSeparator1">
+        </Component>
         <Container class="javax.swing.JPanel" name="jPanel2">
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.DesignFlowLayout"/>
@@ -99,9 +99,6 @@
                 <Property name="columns" type="int" value="15"/>
                 <Property name="toolTipText" type="java.lang.String" value=""/>
               </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="nombreEmpleadoFieldActionPerformed"/>
-              </Events>
             </Component>
           </SubComponents>
         </Container>
@@ -149,7 +146,7 @@
           <SubComponents>
             <Component class="javax.swing.JButton" name="buscarArchivoBtn">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Buscar archivo"/>
+                <Property name="text" type="java.lang.String" value="Leer archivo"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buscarArchivoBtnActionPerformed"/>
@@ -157,10 +154,28 @@
             </Component>
             <Component class="javax.swing.JButton" name="guardarArchivoBtn">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Guardar archivo"/>
+                <Property name="text" type="java.lang.String" value="Crear archivo"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="guardarArchivoBtnActionPerformed"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JButton" name="renombrarArchivoBtn">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Renombrar archivo"/>
+                <Property name="enabled" type="boolean" value="false"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="renombrarArchivoBtnActionPerformed"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JButton" name="eliminarArchivoBtn">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Eliminar archivo"/>
+                <Property name="enabled" type="boolean" value="false"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="eliminarArchivoBtnActionPerformed"/>
               </Events>
             </Component>
           </SubComponents>

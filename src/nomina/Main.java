@@ -6,22 +6,25 @@
 
 package nomina;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFileChooser;
 
 /**
  *
  * @author bruno
  */
 public class Main extends javax.swing.JFrame {
-
+    
+    String nombreAnterior;
+    
     /**
      * Creates new form Main
      */
@@ -41,6 +44,10 @@ public class Main extends javax.swing.JFrame {
         buscarArchivoFileChooser = new javax.swing.JFileChooser();
         buscarArchivoPanel = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
+        jPanel6 = new javax.swing.JPanel();
+        nombreArchivoLabel = new javax.swing.JLabel();
+        nombreArchivoField = new javax.swing.JTextField();
+        jSeparator1 = new javax.swing.JSeparator();
         jPanel2 = new javax.swing.JPanel();
         nombreEmpleadoLabel = new javax.swing.JLabel();
         nombreEmpleadoField = new javax.swing.JTextField();
@@ -56,10 +63,10 @@ public class Main extends javax.swing.JFrame {
         jPanel5 = new javax.swing.JPanel();
         buscarArchivoBtn = new javax.swing.JButton();
         guardarArchivoBtn = new javax.swing.JButton();
+        renombrarArchivoBtn = new javax.swing.JButton();
+        eliminarArchivoBtn = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
-        jMenuItem2 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
 
         buscarArchivoFileChooser.setEnabled(false);
@@ -69,16 +76,20 @@ public class Main extends javax.swing.JFrame {
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Datos empleado"));
         jPanel1.setLayout(new javax.swing.BoxLayout(jPanel1, javax.swing.BoxLayout.Y_AXIS));
 
+        nombreArchivoLabel.setText("Nopmbre del archivo");
+        jPanel6.add(nombreArchivoLabel);
+
+        nombreArchivoField.setColumns(15);
+        jPanel6.add(nombreArchivoField);
+
+        jPanel1.add(jPanel6);
+        jPanel1.add(jSeparator1);
+
         nombreEmpleadoLabel.setText("Nombre del empleado");
         jPanel2.add(nombreEmpleadoLabel);
 
         nombreEmpleadoField.setColumns(15);
         nombreEmpleadoField.setToolTipText("");
-        nombreEmpleadoField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                nombreEmpleadoFieldActionPerformed(evt);
-            }
-        });
         jPanel2.add(nombreEmpleadoField);
 
         jPanel1.add(jPanel2);
@@ -102,7 +113,7 @@ public class Main extends javax.swing.JFrame {
         jPanel1.add(jPanel4);
         jPanel1.add(jSeparator4);
 
-        buscarArchivoBtn.setText("Buscar archivo");
+        buscarArchivoBtn.setText("Leer archivo");
         buscarArchivoBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buscarArchivoBtnActionPerformed(evt);
@@ -110,7 +121,7 @@ public class Main extends javax.swing.JFrame {
         });
         jPanel5.add(buscarArchivoBtn);
 
-        guardarArchivoBtn.setText("Guardar archivo");
+        guardarArchivoBtn.setText("Crear archivo");
         guardarArchivoBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 guardarArchivoBtnActionPerformed(evt);
@@ -118,28 +129,29 @@ public class Main extends javax.swing.JFrame {
         });
         jPanel5.add(guardarArchivoBtn);
 
+        renombrarArchivoBtn.setText("Renombrar archivo");
+        renombrarArchivoBtn.setEnabled(false);
+        renombrarArchivoBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                renombrarArchivoBtnActionPerformed(evt);
+            }
+        });
+        jPanel5.add(renombrarArchivoBtn);
+
+        eliminarArchivoBtn.setText("Eliminar archivo");
+        eliminarArchivoBtn.setEnabled(false);
+        eliminarArchivoBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                eliminarArchivoBtnActionPerformed(evt);
+            }
+        });
+        jPanel5.add(eliminarArchivoBtn);
+
         jPanel1.add(jPanel5);
 
         getContentPane().add(jPanel1, java.awt.BorderLayout.CENTER);
 
         jMenu1.setText("File");
-
-        jMenuItem1.setText("Abrir archivo");
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
-            }
-        });
-        jMenu1.add(jMenuItem1);
-
-        jMenuItem2.setText("Guardar archivo");
-        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem2ActionPerformed(evt);
-            }
-        });
-        jMenu1.add(jMenuItem2);
-
         jMenuBar1.add(jMenu1);
 
         jMenu2.setText("Edit");
@@ -150,20 +162,19 @@ public class Main extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void nombreEmpleadoFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nombreEmpleadoFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_nombreEmpleadoFieldActionPerformed
-
     private void guardarArchivoBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_guardarArchivoBtnActionPerformed
         // TODO add your handling code here:
         
-        // Se crea la variable file que va a crear un archivo a través de streams
-        FileOutputStream file;
-        try {
-            
-            // Se hace una instancia de la clase FileOutputStream con el No. De empleado como nombre de archivo
-            file = new FileOutputStream(noEmpleadoField.getText() + ".empleado");
-            
+        // Configuración del filechoooser para permitir buscar la ruta de guardado
+        buscarArchivoFileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        buscarArchivoFileChooser.setCurrentDirectory(new java.io.File("."));
+        buscarArchivoFileChooser.showDialog(buscarArchivoPanel, "Guardar como");
+
+        // Se crea la variable donde se va a almacenar el archivo de texto
+        String direccion = buscarArchivoFileChooser.getSelectedFile() + "\\" + nombreArchivoField.getText() + ".empleado";
+        
+        try (FileOutputStream file = new FileOutputStream(direccion)) {
+                        
             // Se crea la variable que va a construir el texto dentro del archivo
             String texto = nombreEmpleadoField.getText() + "|" + noEmpleadoField.getText() + "|" + rfcEmpleadoField.getText();
             
@@ -180,6 +191,7 @@ public class Main extends javax.swing.JFrame {
             nombreEmpleadoField.setText("");
             noEmpleadoField.setText("");
             rfcEmpleadoField.setText("");
+            nombreArchivoField.setText("");
             
         } catch (FileNotFoundException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
@@ -192,6 +204,8 @@ public class Main extends javax.swing.JFrame {
         // TODO add your handling code here:
         
         // Mostrar diálogo de buscador de archivos
+        buscarArchivoFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        buscarArchivoFileChooser.setCurrentDirectory(new java.io.File("."));
         buscarArchivoFileChooser.showDialog(buscarArchivoPanel, "Abrir");
         
         // Instanciar el buffered reader para pasar acentos y lineas de texto
@@ -205,78 +219,82 @@ public class Main extends javax.swing.JFrame {
             Empleado empleado = new Empleado(datos[0], datos[1], datos[2]);
             
             // Se llenan los campos del formulario
+            nombreArchivoField.setText(buscarArchivoFileChooser.getSelectedFile().getName().replace(".empleado", ""));
             nombreEmpleadoField.setText(empleado.getNombre());
             noEmpleadoField.setText(empleado.getId());
             rfcEmpleadoField.setText(empleado.getRfc());
+            nombreAnterior = nombreArchivoField.getText();
             
         } catch (FileNotFoundException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        // Se activan botones para renombrar y eliminar el archivo del empleado
+        renombrarArchivoBtn.setEnabled(true);
+        eliminarArchivoBtn.setEnabled(true);
     }//GEN-LAST:event_buscarArchivoBtnActionPerformed
 
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+    private void renombrarArchivoBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_renombrarArchivoBtnActionPerformed
+        
         // TODO add your handling code here:
         
-        // Mostrar diálogo de buscador de archivos
-        buscarArchivoFileChooser.showDialog(buscarArchivoPanel, "Abrir");
+        // Se recupera archivo actual
+        File archivoActual = buscarArchivoFileChooser.getSelectedFile();
         
-        // Instanciar el buffered reader para pasar acentos y lineas de texto
-        try(BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(buscarArchivoFileChooser.getSelectedFile()), StandardCharsets.UTF_8));) {
-            
-            // Se lee la linea de texto y se separa en un arreglo
-            String line = reader.readLine();
-            String[] datos = line.split("\\|");
-            
-            // Se instancia un objeto de empleado
-            Empleado empleado = new Empleado(datos[0], datos[1], datos[2]);
-            
-            // Se llenan los campos del formulario
-            nombreEmpleadoField.setText(empleado.getNombre());
-            noEmpleadoField.setText(empleado.getId());
-            rfcEmpleadoField.setText(empleado.getRfc());
-            
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        // Se elimina archivo actual
+        if(archivoActual.delete()){
+            // Se crea la variable file que va a crear un archivo a través de streams
+            try (FileOutputStream file = new FileOutputStream(buscarArchivoFileChooser.getCurrentDirectory() + "\\" + nombreArchivoField.getText() + ".empleado");) {
+
+                // Se crea la variable que va a construir el texto dentro del archivo
+                String texto = nombreEmpleadoField.getText() + "|" + noEmpleadoField.getText() + "|" + rfcEmpleadoField.getText();
+
+                // Se pasa el texto a un arreglo de bytes
+                byte b[] = texto.getBytes();
+
+                // Se escribe el archivo con el arreglo de bytes
+                file.write(b);
+
+                // Se cierra el stream
+                file.close();
+
+                // Se limpian los campos
+                nombreArchivoField.setText("");
+                nombreEmpleadoField.setText("");
+                noEmpleadoField.setText("");
+                rfcEmpleadoField.setText("");
+
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
+        
+        // Se inhabilitan los botones de renombrar y eliminar archivo
+        renombrarArchivoBtn.setEnabled(false);
+        eliminarArchivoBtn.setEnabled(false);
+        
+    }//GEN-LAST:event_renombrarArchivoBtnActionPerformed
 
-    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+    private void eliminarArchivoBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eliminarArchivoBtnActionPerformed
         // TODO add your handling code here:
         
-                // Se crea la variable file que va a crear un archivo a través de streams
-        FileOutputStream file;
-        try {
-            
-            // Se hace una instancia de la clase FileOutputStream con el No. De empleado como nombre de archivo
-            file = new FileOutputStream(noEmpleadoField.getText() + ".empleado");
-            
-            // Se crea la variable que va a construir el texto dentro del archivo
-            String texto = nombreEmpleadoField.getText() + "|" + noEmpleadoField.getText() + "|" + rfcEmpleadoField.getText();
-            
-            // Se pasa el texto a un arreglo de bytes
-            byte b[] = texto.getBytes();
-
-            // Se escribe el archivo con el arreglo de bytes
-            file.write(b);
-            
-            // Se cierra el stream
-            file.close();
-            
+        // Se recupera archivo actual
+        File archivoActual = buscarArchivoFileChooser.getSelectedFile();
+        
+        // Se elimina a través del método delete()
+        if(archivoActual.delete()){
             // Se limpian los campos
+            nombreArchivoField.setText(""); 
             nombreEmpleadoField.setText("");
             noEmpleadoField.setText("");
             rfcEmpleadoField.setText("");
-            
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }//GEN-LAST:event_jMenuItem2ActionPerformed
+        
+    }//GEN-LAST:event_eliminarArchivoBtnActionPerformed
 
     /**
      * @param args the command line arguments
@@ -315,24 +333,28 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JButton buscarArchivoBtn;
     private javax.swing.JFileChooser buscarArchivoFileChooser;
     private javax.swing.JPanel buscarArchivoPanel;
+    private javax.swing.JButton eliminarArchivoBtn;
     private javax.swing.JButton guardarArchivoBtn;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
+    private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JSeparator jSeparator4;
     private javax.swing.JTextField noEmpleadoField;
     private javax.swing.JLabel noEmpleadoLabel;
+    private javax.swing.JTextField nombreArchivoField;
+    private javax.swing.JLabel nombreArchivoLabel;
     private javax.swing.JTextField nombreEmpleadoField;
     private javax.swing.JLabel nombreEmpleadoLabel;
+    private javax.swing.JButton renombrarArchivoBtn;
     private javax.swing.JTextField rfcEmpleadoField;
     private javax.swing.JLabel rfcEmpleadoLabel;
     // End of variables declaration//GEN-END:variables
